@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Predictive Collision Avoidance - Rohith Ramakrishnan</title>
+  <meta content="Dual-metric TTC/DRAC collision avoidance algorithm in embedded C for urban e-scooters. Validated across 500 scenarios. ARM Cortex-M4 ready at 1.65µs per call." name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+
+</head>
+
+<body class="portfolio-details-page">
+
+  <header id="header" class="header d-flex flex-column justify-content-center">
+
+    <i class="header-toggle d-xl-none bi bi-list"></i>
+
+    <nav id="navmenu" class="navmenu">
+      <ul>
+        <li><a href="index.html#hero"><i class="bi bi-house navicon"></i><span>Home</span></a></li>
+        <li><a href="index.html#about"><i class="bi bi-person navicon"></i><span>About</span></a></li>
+        <li><a href="index.html#resume"><i class="bi bi-file-earmark-text navicon"></i><span>Resume</span></a></li>
+        <li><a href="index.html#portfolio"><i class="bi bi-images navicon"></i><span>Portfolio</span></a></li>
+        <li><a href="index.html#services"><i class="bi bi-hdd-stack navicon"></i><span>Services</span></a></li>
+        <li><a href="index.html#contact"><i class="bi bi-envelope navicon"></i><span>Contact</span></a></li>
+      </ul>
+    </nav>
+
+  </header>
+
+  <main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title" data-aos="fade">
+      <div class="container">
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#portfolio">Portfolio</a></li>
+            <li class="current">Predictive Collision Avoidance - E-Scooter</li>
+          </ol>
+        </nav>
+        <h1>Predictive Collision Avoidance for Urban E-Scooters</h1>
+      </div>
+    </div><!-- End Page Title -->
+
+    <!-- Portfolio Details Section -->
+    <section id="portfolio-details" class="portfolio-details section">
+
+      <div class="container" data-aos="fade-up">
+
+        <div class="row justify-content-between gy-4 mt-4">
+
+          <div class="col-lg-8" data-aos="fade-up">
+            <div class="portfolio-description">
+
+              <h2>Dual-Metric TTC/DRAC Safety Algorithm - ARM Cortex-M4 Ready</h2>
+
+              <!-- THE PROBLEM -->
+              <h5 class="mt-4 text-uppercase" style="letter-spacing:0.08em; font-size:0.8rem; color:#666;">The Problem</h5>
+              <p>
+                E-scooter collision fatalities in the UK rose sharply between 2020 and 2022. Existing safety research focused heavily on automotive-scale vehicles - the specific dynamics, speeds, and urban encounter geometries of micro-mobility were largely unaddressed. Most existing TTC-only algorithms also share a critical blind spot: they can fail to trigger an emergency warning in scenarios where the physical braking demand (DRAC) already makes collision unavoidable, even when the time-to-impact still appears safe.
+              </p>
+              <p>
+                The challenge was to design a collision avoidance algorithm specifically calibrated to UK e-scooter conditions - using real accident data rather than borrowed automotive thresholds - and to prove it was fast enough to run on a real embedded microcontroller.
+              </p>
+
+              <!-- WHAT I BUILT -->
+              <h5 class="mt-4 text-uppercase" style="letter-spacing:0.08em; font-size:0.8rem; color:#666;">What I Built</h5>
+              <p>
+                I designed and implemented a <strong>dual-metric collision avoidance algorithm</strong> in portable C99, combining Time-to-Collision (TTC) and Deceleration Rate to Avoid Collision (DRAC). The dual-metric design is intentional: TTC measures <em>temporal imminence</em> (how long until impact?), while DRAC measures <em>physical inevitability</em> (how hard must we brake right now?). Scenarios exist where each metric alone fails - the combination provides coverage that a TTC-only system cannot match.
+              </p>
+              <p>
+                Every 10 milliseconds, the algorithm takes the scooter's position, heading, and speed, plus the detected obstacle's position and velocity, and outputs five values: TTC in seconds, DRAC in m/s², a 3-state safety status (SAFE / CAUTION / EMERGENCY), a braking command, and a steering correction angle.
+              </p>
+              <p>
+                <strong>Threshold derivation was data-driven, not borrowed.</strong> I analysed UK STATS19 e-scooter accident data from 2020-2022 to derive the decision thresholds directly from real UK conditions. At 25 km/h with maximum braking (3.5 m/s²), minimum stopping distance is 6.9 m, giving a minimum TTC at the unavoidability boundary of ~1.0 s. The 1.5 s emergency threshold provides a 0.5 s margin above this. The 3.0 s caution threshold equals braking time plus reaction time at maximum legal UK speed.
+              </p>
+              <p>
+                The <strong>MATLAB/Simulink SIL framework</strong> validated the algorithm across 500 structured scenarios spanning 5 encounter types: head-on (25%), crossing path (30%), emergency cut-in (20%), overtaking (15%), and near-miss glancing passes (10%). The near-miss scenarios specifically test false-positive rejection - a system that cries emergency on every near-miss is useless in practice. Monte Carlo seed was fixed at <code>rng(42)</code> for full reproducibility.
+              </p>
+              <p>
+                The C algorithm was written specifically for <strong>embedded deployment</strong> - no dynamic memory allocation, no recursion, no platform dependencies beyond <code>&lt;math.h&gt;</code>, C99 standard throughout. It cross-compiles directly to ARM Cortex-M4 with GCC ARM toolchain.
+              </p>
+
+              <!-- THE RESULT -->
+              <h5 class="mt-4 text-uppercase" style="letter-spacing:0.08em; font-size:0.8rem; color:#666;">Results &amp; Key Metrics</h5>
+
+              <div class="row gy-3 mb-4">
+                <div class="col-md-6">
+                  <div class="p-3" style="background:#f8f9fa; border-radius:6px;">
+                    <div style="font-size:1.8rem; font-weight:700; color:#0563bb;">1.65 µs</div>
+                    <div style="font-size:0.85rem; color:#666;">ARM Cortex-M4 execution time @ 168 MHz</div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="p-3" style="background:#f8f9fa; border-radius:6px;">
+                    <div style="font-size:1.8rem; font-weight:700; color:#0563bb;">0.016%</div>
+                    <div style="font-size:0.85rem; color:#666;">Of the 10 ms control loop budget used</div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="p-3" style="background:#f8f9fa; border-radius:6px;">
+                    <div style="font-size:1.8rem; font-weight:700; color:#0563bb;">500</div>
+                    <div style="font-size:0.85rem; color:#666;">Structured validation scenarios across 5 encounter types</div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="p-3" style="background:#f8f9fa; border-radius:6px;">
+                    <div style="font-size:1.8rem; font-weight:700; color:#0563bb;">79 FLOPs</div>
+                    <div style="font-size:0.85rem; color:#666;">Per algorithm call - deterministic, bounded execution</div>
+                  </div>
+                </div>
+              </div>
+
+              <ul>
+                <li>False-negative rate on dangerous scenarios (Types 1-3): within &lt;5% target</li>
+                <li>False-positive rate on near-miss scenarios (Type 5): within &lt;5% target</li>
+                <li>Thresholds empirically derived from UK STATS19 data - not borrowed from automotive standards</li>
+                <li>Compatible with ARM Cortex-M0/M3/M4/M7 - execution time scales with clock speed</li>
+                <li>Zero heap usage - suitable for safety-critical real-time environments</li>
+              </ul>
+
+              <!-- KEY FINDING -->
+              <h5 class="mt-4 text-uppercase" style="letter-spacing:0.08em; font-size:0.8rem; color:#666;">Key Finding from Sensitivity Analysis</h5>
+              <p>
+                Ego speed is the <strong>dominant parameter</strong> governing safety margin - a 10% speed reduction produces a larger safety improvement than a 30% improvement in sensor noise. This finding has a direct policy implication: <strong>speed regulation contributes more to collision avoidance effectiveness than sensor hardware upgrades.</strong> This makes the algorithm directly relevant to UK micro-mobility regulation discussions.
+              </p>
+
+              <!-- WHAT NEXT -->
+              <h5 class="mt-4 text-uppercase" style="letter-spacing:0.08em; font-size:0.8rem; color:#666;">Roadmap</h5>
+              <p>
+                The planned v1.5.0 release adds Unity unit tests and GitHub Actions CI (mirroring the Basesync pipeline approach). v2.5.0 will add actual ARM cross-compile, STM32 WCET measurement on real hardware, and HIL validation. v3.0.0 targets multi-obstacle detection and an incident black box for post-crash analysis.
+              </p>
+
+            </div>
+          </div>
+
+          <div class="col-lg-3" data-aos="fade-up" data-aos-delay="100">
+            <div class="portfolio-info">
+              <h3>Project Information</h3>
+              <ul>
+                <li><strong>Category</strong> Research / Embedded Safety Systems</li>
+                <li><strong>Context</strong> M.Sc. Dissertation - De Montfort University</li>
+                <li><strong>Languages</strong> Embedded C (30.7%), MATLAB (69.3%)</li>
+                <li><strong>Platform Target</strong> ARM Cortex-M4 (STM32)</li>
+                <li><strong>Algorithm</strong> Dual-metric TTC + DRAC</li>
+                <li><strong>Validation</strong> 500-scenario Monte Carlo SIL</li>
+                <li><strong>Data Source</strong> UK STATS19 (2020-2022)</li>
+                <li><strong>Control Loop Use</strong> 0.016% of 10 ms budget</li>
+                <li><strong>Licence</strong> MIT</li>
+                <li><a href="https://github.com/Rohith-Kalarikkal/predictive-collision-avoidance-escooter" target="_blank" class="btn-visit align-self-start">View on GitHub</a></li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section><!-- /Portfolio Details Section -->
+
+  </main>
+
+  <footer id="footer" class="footer position-relative light-background">
+    <div class="container">
+      <h3 class="sitename">Rohith Ramakrishnan</h3>
+      <p>Embedded Firmware Engineer - EV · Automotive · STM32 · CAN Bus · CI/CD. Available for freelance and contract work.</p>
+      <div class="social-links d-flex justify-content-center">
+        <a href="https://github.com/Rohith-Kalarikkal" target="_blank"><i class="bi bi-github"></i></a>
+        <a href="https://github.com/basesync" target="_blank"><i class="bi bi-code-slash"></i></a>
+        <a href="https://www.linkedin.com/in/rohith-k-r" target="_blank"><i class="bi bi-linkedin"></i></a>
+      </div>
+      <div class="container">
+        <div class="copyright">
+          <span>Copyright</span> <strong class="px-1 sitename">Rohith Ramakrishnan</strong> <span>All Rights Reserved</span>
+        </div>
+        <div class="credits">
+          Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> Distributed by <a href="https://themewagon.com">ThemeWagon</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+  <div id="preloader"></div>
+
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/typed.js/typed.umd.js"></script>
+  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="assets/vendor/waypoints/noframework.waypoints.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="assets/js/main.js"></script>
+
+</body>
+</html>

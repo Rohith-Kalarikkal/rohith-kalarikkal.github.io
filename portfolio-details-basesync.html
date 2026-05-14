@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Basesync EV ECU Firmware - Rohith Ramakrishnan</title>
+  <meta content="Production-grade EV ECU firmware on STM32 ARM Cortex-M - layered architecture, fault-safe state machine, CAN Bus telemetry, full embedded CI/CD pipeline." name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+
+</head>
+
+<body class="portfolio-details-page">
+
+  <header id="header" class="header d-flex flex-column justify-content-center">
+
+    <i class="header-toggle d-xl-none bi bi-list"></i>
+
+    <nav id="navmenu" class="navmenu">
+      <ul>
+        <li><a href="index.html#hero"><i class="bi bi-house navicon"></i><span>Home</span></a></li>
+        <li><a href="index.html#about"><i class="bi bi-person navicon"></i><span>About</span></a></li>
+        <li><a href="index.html#resume"><i class="bi bi-file-earmark-text navicon"></i><span>Resume</span></a></li>
+        <li><a href="index.html#portfolio"><i class="bi bi-images navicon"></i><span>Portfolio</span></a></li>
+        <li><a href="index.html#services"><i class="bi bi-hdd-stack navicon"></i><span>Services</span></a></li>
+        <li><a href="index.html#contact"><i class="bi bi-envelope navicon"></i><span>Contact</span></a></li>
+      </ul>
+    </nav>
+
+  </header>
+
+  <main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title" data-aos="fade">
+      <div class="container">
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#portfolio">Portfolio</a></li>
+            <li class="current">Basesync EV ECU Firmware</li>
+          </ol>
+        </nav>
+        <h1>Basesync - EV ECU Firmware Platform</h1>
+      </div>
+    </div><!-- End Page Title -->
+
+    <!-- Portfolio Details Section -->
+    <section id="portfolio-details" class="portfolio-details section">
+
+      <div class="container" data-aos="fade-up">
+
+        <div class="row justify-content-between gy-4 mt-4">
+
+          <div class="col-lg-8" data-aos="fade-up">
+            <div class="portfolio-description">
+
+              <h2>Production-Grade EV ECU Firmware - Built From Scratch</h2>
+
+              <!-- THE PROBLEM -->
+              <h5 class="mt-4 text-uppercase" style="letter-spacing:0.08em; font-size:0.8rem; color:#666;">The Problem</h5>
+              <p>
+                Most embedded hobby or student EV projects write firmware directly in <code>main.c</code> with no architecture, no testing, and no way to catch dangerous faults before they reach hardware. A real EV ECU running in a vehicle needs to handle overcurrent events, thermal runaway signals, and sensor failures - and it needs to do so reliably, every cycle, without crashing or hanging. The challenge was to build a firmware platform that meets automotive-grade reliability standards, with a full DevOps pipeline, on a 4-engineer team using open tooling.
+              </p>
+
+              <!-- WHAT I BUILT -->
+              <h5 class="mt-4 text-uppercase" style="letter-spacing:0.08em; font-size:0.8rem; color:#666;">What I Built</h5>
+              <p>
+                I architected a <strong>layered firmware platform</strong> (Application → Service → HAL) for an Electric Vehicle ECU targeting STM32 ARM Cortex-M microcontrollers. The layering ensures each module has a single responsibility - the application layer knows nothing about hardware registers, and the HAL layer knows nothing about vehicle logic. This makes the firmware testable, maintainable, and portable.
+              </p>
+              <p>
+                The <strong>EV state machine</strong> manages 5 system states and handles real-world fault scenarios: battery temperature breaches, motor overheating, overcurrent detection, and throttle/brake signal conflicts. On any critical fault, the system transitions to a defined Safe State - cutting motor PWM, broadcasting a fault frame on the CAN Bus, and logging the event over UART.
+              </p>
+              <p>
+                The <strong>CAN Bus architecture</strong> covers 4 message IDs: <code>EV_STATUS (0x100)</code> broadcast every 100ms with vehicle state and fault flags; <code>SENSOR_PACK_1 (0x101)</code> and <code>SENSOR_PACK_2 (0x102)</code> for battery, motor, and throttle telemetry; and <code>FAULT_FRAME (0x1FF)</code> sent immediately on any fault event. This mirrors real automotive ECU communication patterns.
+              </p>
+              <p>
+                I built the entire <strong>embedded CI/CD pipeline</strong> from scratch using GitHub Actions. Every pull request triggers: ARM cross-compilation check, Unity unit test runner, Cppcheck static analysis with MISRA-C inspired rules, and Snyk security scanning. Code cannot merge if any stage fails. This is the kind of pipeline most embedded teams don't have - and it's the most direct way to demonstrate engineering discipline to a client.
+              </p>
+              <p>
+                A <strong>Software-in-the-Loop (SIL) workflow</strong> using Wokwi and VS Code enables virtual hardware testing with a simulated STM32, potentiometers for throttle control, and buttons for fault injection - all without physical hardware. This lets the team validate throttle response, brake logic, and fault transitions in simulation before touching real silicon.
+              </p>
+
+              <!-- THE RESULT -->
+              <h5 class="mt-4 text-uppercase" style="letter-spacing:0.08em; font-size:0.8rem; color:#666;">Results &amp; Key Metrics</h5>
+              <ul>
+                <li>CI/CD pipeline covering build, unit tests, static analysis, and security scanning - all automated on every PR</li>
+                <li>Unity unit test coverage target: <strong>&gt;80%</strong> across core modules</li>
+                <li>8 sensors sampled at 10–100ms intervals across ADC, GPIO, and encoder interfaces</li>
+                <li>4 CAN Bus message IDs covering real-time status, sensor telemetry, and fault reporting</li>
+                <li>5-state EV state machine with deterministic Safe State transitions on fault detection</li>
+                <li>Full SIL test suite covering throttle, brake, and fault-injection scenarios - no hardware required</li>
+                <li>MISRA-C inspired coding standards enforced automatically in the pipeline via Cppcheck</li>
+                <li>CMake-based cross-compilation toolchain for ARM GCC - reproducible builds across the team</li>
+              </ul>
+
+              <!-- ARCHITECTURE CALLOUT -->
+              <h5 class="mt-4 text-uppercase" style="letter-spacing:0.08em; font-size:0.8rem; color:#666;">System Architecture</h5>
+              <img src="assets/img/portfolio/system_architecture.jpg" class="img-fluid" alt="Basesync EV ECU Firmware">
+
+              <!-- WHAT I LEARNED -->
+              <h5 class="mt-4 text-uppercase" style="letter-spacing:0.08em; font-size:0.8rem; color:#666;">What's Next</h5>
+              <p>
+                The roadmap includes FreeRTOS integration for task scheduling, a bootloader for OTA firmware updates, HIL (Hardware-in-the-Loop) validation on physical STM32 hardware, and a HARA (Hazard Analysis and Risk Assessment) aligned with ISO 26262. The project is actively in Sprint 2, adding sensor HAL and motor control modules.
+              </p>
+
+            </div>
+          </div>
+
+          <div class="col-lg-3" data-aos="fade-up" data-aos-delay="100">
+            <div class="portfolio-info">
+              <h3>Project Information</h3>
+              <ul>
+                <li><strong>Category</strong> EV / Automotive Firmware</li>
+                <li><strong>Platform</strong> STM32, ARM Cortex-M</li>
+                <li><strong>Language</strong> Embedded C (76%), C++ (22%)</li>
+                <li><strong>Protocols</strong> CAN Bus, UART, ADC, GPIO, PWM</li>
+                <li><strong>CI/CD</strong> GitHub Actions, Unity, Cppcheck, Snyk</li>
+                <li><strong>Simulation</strong> Wokwi SIL + VS Code</li>
+                <li><strong>Team</strong> 4-engineer Agile / Scrum</li>
+                <li><strong>Started</strong> January 2026</li>
+                <li><strong>Status</strong> Active - In Development</li>
+                <li><a href="https://github.com/basesync/ev-ecu-system" target="_blank" class="btn-visit align-self-start">View on GitHub</a></li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section><!-- /Portfolio Details Section -->
+
+  </main>
+
+  <footer id="footer" class="footer position-relative light-background">
+    <div class="container">
+      <h3 class="sitename">Rohith Ramakrishnan</h3>
+      <p>Embedded Firmware Engineer - EV · Automotive · STM32 · CAN Bus · CI/CD. Available for freelance and contract work.</p>
+      <div class="social-links d-flex justify-content-center">
+        <a href="https://github.com/Rohith-Kalarikkal" target="_blank"><i class="bi bi-github"></i></a>
+        <a href="https://github.com/basesync" target="_blank"><i class="bi bi-code-slash"></i></a>
+        <a href="https://www.linkedin.com/in/rohith-k-r" target="_blank"><i class="bi bi-linkedin"></i></a>
+      </div>
+      <div class="container">
+        <div class="copyright">
+          <span>Copyright</span> <strong class="px-1 sitename">Rohith Ramakrishnan</strong> <span>All Rights Reserved</span>
+        </div>
+        <div class="credits">
+          Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> Distributed by <a href="https://themewagon.com">ThemeWagon</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+  <div id="preloader"></div>
+
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/typed.js/typed.umd.js"></script>
+  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="assets/vendor/waypoints/noframework.waypoints.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="assets/js/main.js"></script>
+
+</body>
+</html>
